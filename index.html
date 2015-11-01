@@ -1,0 +1,120 @@
+<html>
+<head>
+    <title>CPP Life</title>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <link href="css/style.css" rel="stylesheet">  
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
+    <script src="js/app.js"></script>
+    <style> .glyphicon-thumbs-up { cursor:pointer } </style>
+</head>
+<body ng-app="cpplife" ng-controller="MainCtrl">
+    <div class="container">
+        <div class="row">
+            <img src="./img/thincpplife.jpg" class="img-responsive banner-movement">
+            <nav class="navbar navbar-default">
+              <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand">Filter By:</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                  <ul class="nav navbar-nav">
+                    <button type="button" class="btn btn-default navbar-btn">All</button>
+                    <button type="button" class="btn btn-default navbar-btn">Events</button>
+                    <button type="button" class="btn btn-default navbar-btn">Funny</button>
+                    <button type="button" class="btn btn-default navbar-btn">Food</button>
+                  </ul>      
+                </div><!-- /.navbar-collapse -->
+              </div><!-- /.container-fluid -->
+            </nav>
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2">
+                <ui-view></ui-view>
+            </div>
+        </div>
+    </div>
+
+<!--template for home-->
+    <script type="text/ng-template" id="/home.html">
+        <div class="page-header">
+            <h1>CPP Life</h1>
+        </div>
+
+        <form ng-submit="addPost()" class="submit-padding">
+            <h3>Submit a new Link</h3>
+            <div class="form-group">
+                <input type="text" ng-model="title" placeholder="Title" class="form-control"></input>
+            </div>
+            <div class="form-group">
+                <input type="text" ng-model="link" placeholder="Link: http://" class="form-control"></input>
+            </div>
+            <button type="submit" class="btn btn-primary">Post</button>
+        </form>
+
+        <div ng-repeat="post in posts | orderBy: '-upvotes'" class="post-padding">
+            <a ng-show="post.link" href="{{post.link}}">
+                {{post.title}}
+            </a>
+            <span ng-hide="post.link">
+                {{post.title}}
+            </span>
+            <br>
+            <img ng-src="{{post.img}}" class="img-responsive"/>
+            <span class=" glyphicon glyphicon-thumbs-up" ng-click="incrementUpvotes(post)">
+            </span>
+            {{post.upvotes}}
+            <span>
+                <a href="#/posts/{{$index}}">Comments</a>
+            </span>
+        </div>
+    </script>
+
+<!--template for posts-->
+    <script type="text/ng-template" id="/posts.html">
+        <div class="page-header">
+            <h3>
+            <span style="paddingL">
+                <a ng-show="post.link" href="{{post.link}}">
+                    {{post.title}}
+                </a>
+                <span ng-hide="post.link">
+                    {{post.title}}
+                </span>
+            </span>
+            </h3>
+        </div>
+
+        <div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
+            <span class=" glyphicon glyphicon-thumbs-up" ng-click="incrementUpvotes(comment)"></span>
+            {{comment.upvotes}} - by {{comment.author}}
+            <span>
+                {{comment.body}}
+            </span>
+        </div>
+
+        <form ng-submit="addComment()" class="submit-padding">
+            <h3>Add a new comment</h3>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Comment" ng-model="body"></input>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Nickname" ng-model="author"></input>
+            </div>
+            <button type="submit" class="btn btn-primary">Post</button>
+            <button type="submit" class="btn btn-primary" onclick="location.href='./index.html'">Return</button>
+        </form>
+    </script>
+</body>
+</html>
+
